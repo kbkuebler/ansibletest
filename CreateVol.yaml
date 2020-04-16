@@ -1,0 +1,26 @@
+---
+
+- name: Create a volume on FA example.
+  hosts: localhost
+  gather_facts: true
+  collections:
+    - purestorage.flasharray
+  vars_files:
+    - myvars.yaml
+  tasks:
+    - name: Get array info
+      purefa_info:
+        gather_subset:
+        - minimum
+        - network
+        - interfaces
+        fa_url: "{{ fa_url }}"
+        api_token: "{{ fa_token }}"
+      register: fa_info
+
+    - name: Create dis vol, son!
+      purefa_volume:
+        name: "kbkvolume"
+        size: 10G
+        fa_url: "{{ fa_url }}"
+        api_token: "{{ fa_token }}"
