@@ -23,7 +23,6 @@ echo "#### Installing the Purestorage Ansible Collection  ####"
 
 ansible-galaxy collection install purestorage.flasharray
 
-<<<<<<< HEAD
 echo "####  Making VIM feel right ####"
 cat << 'EOF' >> ~/.vimrc
 set incsearch           " search as characters are entered
@@ -35,8 +34,14 @@ set softtabstop=4       " number of spaces in tab when editing
 set tabstop=4           " number of visual spaces per TAB
 EOF
 
-=======
+#We need to change the hostname of this host. Note that it's "linux" on teh F
+# and it's "Linux" on the host. 
+
+echo "#### Changing hostname ####"
+
+echo "linux" > /etc/hostname
+systemctl restart systemd-hostnamed
+
 #make sure that we change the interpreter to python3!
 #this is from the testing branch
 #added while testing is checked out
->>>>>>> 715890b74b375ac3f35d277d0461c4499258cb85
