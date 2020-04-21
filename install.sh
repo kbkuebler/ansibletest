@@ -5,7 +5,6 @@
 #Install necessary packages, only python2 installed
 
 APACKG=( epel-release python3 python3-pip centos-release-ansible-29 ansible vim )
-HNAME=$(hostname)
 
 
 echo "####  Installing Python3 and Ansible  ####"
@@ -50,6 +49,7 @@ echo "#### Changing hostname ####"
 echo "linux" > /etc/hostname
 systemctl restart systemd-hostnamed
 
+HNAME=$(hostname)
 
 for lname in 'linux';do
     if [ "$HNAME" = "$lname" ]; then
@@ -58,3 +58,12 @@ for lname in 'linux';do
         echo "Hostname still needs to be changed!"
     fi
 done
+
+#Let's clean up the existing linux host and volume
+
+purevol disconnect --host linux linux-lun-01
+purevol destroy linux-lun-01
+purehost delete linux
+
+systemctl restart multipathd
+
