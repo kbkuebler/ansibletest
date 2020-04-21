@@ -1,0 +1,88 @@
+- name: Live migration using ActiveCluster
+  hosts: localhost
+  gather_facts: true
+  collections:
+  - purestorage.flasharray
+  vars_files:
+    - testdrive_vars.yaml
+  tasks:
+  - name: Get source FlashArray info
+    purefa_info:
+      gather_subset:
+      - minimum
+      - network
+      - interfaces
+      fa_url: "{{ fa1_ip }}"
+      api_token: "{{ fa1_token }}"
+    register: fa1_info
+
+  - name: Get destination FlashArray info
+    purefa_info:
+      gather_subset:
+      - minimum
+      - network
+      - interfaces
+      fa_url: "{{ fa2_ip }}"
+      api_token: "{{ fa2_token }}"
+    register: fa2_info
+
+  - name: Connect arrays in ActiveCluster configuration
+    purefa_connect:
+      target_url: "{{ fa2_ip }}"
+      target_api: "{{ fa2_token }}"
+      connection: sync
+      fa_url: "{{ fa1_ip }}"
+      api_token: "{{ fa1_token }}"
+
+  - name: Create migration pod
+    purefa_pod:
+      name: "{{ migration_pod }}"
+      fa_url: "{{ fa1_ip }}"
+      api_token: "{{ fa1_token }}"
+
+  - name: Move migration volume to migration pod
+    purefa_volume:
+      name: "{{ migration_vol }}"
+      move: "{{ migration_pod }}"
+      fa_url: "{{ fa1_ip }}"
+      api_token: "{{ fa1_token }}"
+
+  - name: Stretch migration pod to destination array
+    purefa_pod:
+      name: "{{ migration_pod }}"
+      stretch: "{{ fa1_info['purefa_info']['default']['array_name'] }}"
+      fa_url: "{{ fa1_ip }}"
+      api_token: "{{ fa1_token }}"
+
+  - name: Wait for pod sync
+    purefa_info:
+      gather_subset: pods
+      fa_url: "{{ fa1_ip }}"
+      api_token: "{{ fa1_token }}"
+    register: output
+    retries: 40
+    delay: 5
+    until: "output | json_query('purefa_info.pods.\"{{ migration_pod }}\".arrays[].status') == ['online', 'online']"
+
+  - name: Create host object on destination array
+    purefa_host:
+      host: "{{ ansible_hostname }}"
+      iqn: "{{ ansible_iscsi_iqn }}"
+      volume: "{{ migration_pod }}::{{ migration_vol }}"
+      fa_url: "{{ fa2_ip }}"
+      api_token: "{{ fa2_token }}"
+
+  - name: Discover destination FlashArray using iSCSI
+    open_iscsi:
+      show_nodes: yes
+      discover: yes
+      portal: "{{ dst_array_info.purefa_info.network[dst_iscsi_port].address }}"
+    register: dst_iscsi_iqn
+
+  - name: Connect to destination FlashArray over iSCSI
+    open_iscsi:
+      target: "{{ dst_iscsi_iqn.nodes[0] }}"
+      login: yes
+
+  - name: Ensure new multipath links from destination array are connected
+    command: /usr/sbin/multipath -r
