@@ -66,4 +66,8 @@ purevol destroy linux-lun-01
 purehost delete linux
 
 systemctl restart multipathd
+/usr/sbin/multipath -r
+
+git config --global user.name "Brian Kuebler"
+git config --global user.email bkuebler@gmail.com
 
