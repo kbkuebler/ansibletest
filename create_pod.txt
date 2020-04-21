@@ -1,0 +1,79 @@
+ansible-playbook 2.9.7
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = [u'/root/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python2.7/site-packages/ansible
+  executable location = /usr/bin/ansible-playbook
+  python version = 2.7.5 (default, Jun 20 2019, 20:27:34) [GCC 4.8.5 20150623 (Red Hat 4.8.5-36)]
+Using /etc/ansible/ansible.cfg as config file
+setting up inventory plugins
+host_list declined parsing /etc/ansible/hosts as it did not pass its verify_file() method
+script declined parsing /etc/ansible/hosts as it did not pass its verify_file() method
+auto declined parsing /etc/ansible/hosts as it did not pass its verify_file() method
+Parsed /etc/ansible/hosts inventory source with ini plugin
+Loading callback plugin default of type stdout, v2.0 from /usr/lib/python2.7/site-packages/ansible/plugins/callback/default.pyc
+
+PLAYBOOK: CreatePod.yaml ******************************************************************************************************************************************************
+Positional arguments: CreatePod.yaml
+become_method: sudo
+inventory: (u'/etc/ansible/hosts',)
+forks: 5
+tags: (u'all',)
+extra_vars: (u'ansible_python_interpreter=/usr/bin/python3',)
+verbosity: 4
+connection: smart
+timeout: 10
+1 plays in CreatePod.yaml
+Read vars_file 'testdrive_vars.yaml'
+Read vars_file 'testdrive_vars.yaml'
+Read vars_file 'testdrive_vars.yaml'
+
+PLAY [Create a pod] ***********************************************************************************************************************************************************
+Read vars_file 'testdrive_vars.yaml'
+
+TASK [Gathering Facts] ********************************************************************************************************************************************************
+task path: /root/ansibletest/CreatePod.yaml:1
+<127.0.0.1> ESTABLISH LOCAL CONNECTION FOR USER: root
+<127.0.0.1> EXEC /bin/sh -c 'echo ~root && sleep 0'
+<127.0.0.1> EXEC /bin/sh -c '( umask 77 && mkdir -p "` echo /root/.ansible/tmp `"&& mkdir /root/.ansible/tmp/ansible-tmp-1587507454.92-3174-268921133267455 && echo ansible-tmp-1587507454.92-3174-268921133267455="` echo /root/.ansible/tmp/ansible-tmp-1587507454.92-3174-268921133267455 `" ) && sleep 0'
+Using module file /usr/lib/python2.7/site-packages/ansible/modules/system/setup.py
+<127.0.0.1> PUT /root/.ansible/tmp/ansible-local-3165TBZtu5/tmpDIRmsV TO /root/.ansible/tmp/ansible-tmp-1587507454.92-3174-268921133267455/AnsiballZ_setup.py
+<127.0.0.1> EXEC /bin/sh -c 'chmod u+x /root/.ansible/tmp/ansible-tmp-1587507454.92-3174-268921133267455/ /root/.ansible/tmp/ansible-tmp-1587507454.92-3174-268921133267455/AnsiballZ_setup.py && sleep 0'
+<127.0.0.1> EXEC /bin/sh -c '/usr/bin/python3 /root/.ansible/tmp/ansible-tmp-1587507454.92-3174-268921133267455/AnsiballZ_setup.py && sleep 0'
+<127.0.0.1> EXEC /bin/sh -c 'rm -f -r /root/.ansible/tmp/ansible-tmp-1587507454.92-3174-268921133267455/ > /dev/null 2>&1 && sleep 0'
+ok: [localhost]
+META: ran handlers
+Read vars_file 'testdrive_vars.yaml'
+
+TASK [Create a pod] ***********************************************************************************************************************************************************
+task path: /root/ansibletest/CreatePod.yaml:10
+<127.0.0.1> ESTABLISH LOCAL CONNECTION FOR USER: root
+<127.0.0.1> EXEC /bin/sh -c 'echo ~root && sleep 0'
+<127.0.0.1> EXEC /bin/sh -c '( umask 77 && mkdir -p "` echo /root/.ansible/tmp `"&& mkdir /root/.ansible/tmp/ansible-tmp-1587507456.22-3234-11890515686944 && echo ansible-tmp-1587507456.22-3234-11890515686944="` echo /root/.ansible/tmp/ansible-tmp-1587507456.22-3234-11890515686944 `" ) && sleep 0'
+Using module file /root/.ansible/collections/ansible_collections/purestorage/flasharray/plugins/modules/purefa_pod.py
+<127.0.0.1> PUT /root/.ansible/tmp/ansible-local-3165TBZtu5/tmpAPFMN1 TO /root/.ansible/tmp/ansible-tmp-1587507456.22-3234-11890515686944/AnsiballZ_purefa_pod.py
+<127.0.0.1> EXEC /bin/sh -c 'chmod u+x /root/.ansible/tmp/ansible-tmp-1587507456.22-3234-11890515686944/ /root/.ansible/tmp/ansible-tmp-1587507456.22-3234-11890515686944/AnsiballZ_purefa_pod.py && sleep 0'
+<127.0.0.1> EXEC /bin/sh -c '/usr/bin/python3 /root/.ansible/tmp/ansible-tmp-1587507456.22-3234-11890515686944/AnsiballZ_purefa_pod.py && sleep 0'
+<127.0.0.1> EXEC /bin/sh -c 'rm -f -r /root/.ansible/tmp/ansible-tmp-1587507456.22-3234-11890515686944/ > /dev/null 2>&1 && sleep 0'
+The full traceback is:
+  File "/tmp/ansible_purefa_pod_payload_7mj6omx8/ansible_purefa_pod_payload.zip/ansible/module_utils/basic.py", line 1508, in _check_mutually_exclusive
+    check_mutually_exclusive(spec, param)
+  File "/tmp/ansible_purefa_pod_payload_7mj6omx8/ansible_purefa_pod_payload.zip/ansible/module_utils/common/validation.py", line 59, in check_mutually_exclusive
+    count = count_terms(check, module_parameters)
+  File "/tmp/ansible_purefa_pod_payload_7mj6omx8/ansible_purefa_pod_payload.zip/ansible/module_utils/common/validation.py", line 39, in count_terms
+    return len(set(terms).intersection(module_parameters))
+fatal: [localhost]: FAILED! => {
+    "changed": false, 
+    "invocation": {
+        "module_args": {
+            "api_token": "VALUE_SPECIFIED_IN_NO_LOG_PARAMETER", 
+            "fa_url": "172.16.3.101", 
+            "name": "mig-pod", 
+            "state": "present"
+        }
+    }, 
+    "msg": "unhashable type: 'list'"
+}
+
+PLAY RECAP ********************************************************************************************************************************************************************
+localhost                  : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+

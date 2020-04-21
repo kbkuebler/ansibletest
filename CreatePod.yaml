@@ -1,0 +1,15 @@
+- name: Create a pod
+  hosts: localhost
+  gather_facts: true
+  collections:
+  - purestorage.flasharray
+  vars_files: testdrive_vars.yaml
+  
+  tasks:
+
+    - name: Create a pod
+      purefa_pod:
+        name: mig-pod
+        fa_url: "{{ fa1_ip }}"
+        api_token: "{{ fa1_token }}"
+        state: present
