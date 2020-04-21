@@ -7,3 +7,4 @@ migration_pod: mig-pod
 fa1_iscsi_port: ct0.eth1
 fa2_iscsi_port: ct0.eth3
 mount_path: /mnt/mig-test
+orig_volume: linux-01

@@ -1,8 +1,8 @@
 #!/bin/bash
-#This is only to be used as a prep for the Pure Test Drive Environment
-#Brian Kuebler 4/17/20
+# This is only to be used as a prep for the Pure Test Drive Environment
+# Brian Kuebler 4/17/20
 
-#Install necessary packages, only python2 installed
+# Install necessary packages, only python2 installed
 
 APACKG=( epel-release python3 python3-pip centos-release-ansible-29 ansible vim )
 
@@ -19,12 +19,12 @@ done
 
 
 
-#Install SDK 
+# Install SDK 
 
 echo "####  Installing the Pure Storage SDK  ####"
 pip3 install purestorage
 
-#Install the Pure Storage collection
+# Install the Pure Storage collection
 
 echo "#### Installing the Purestorage Ansible Collection  ####"
 
@@ -41,7 +41,7 @@ set softtabstop=4       " number of spaces in tab when editing
 set tabstop=4           " number of visual spaces per TAB
 EOF
 
-#We need to change the hostname of this host. Note that it's "linux" on the FA
+# We need to change the hostname of this host. Note that it's "linux" on the FA
 # and it's "Linux" on the host. 
 
 echo "#### Changing hostname ####"
@@ -59,11 +59,11 @@ for lname in 'linux';do
     fi
 done
 
-#Let's clean up the existing linux host and volume
-
-purevol disconnect --host linux linux-lun-01
-purevol destroy linux-lun-01
-purehost delete linux
+# Let's clean up the existing linux host and volume
+# Actually, let's do it via ansible
+# purevol disconnect --host linux linux-lun-01
+# purevol destroy linux-lun-01
+# purehost delete linux
 
 systemctl restart multipathd
 /usr/sbin/multipath -r
