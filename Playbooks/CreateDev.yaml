@@ -1,0 +1,44 @@
+---
+- name: Spin up dev env
+  hosts: localhost
+  gather_facts: true
+  collections:
+    - purestorage.flasharray
+  vars_files:
+    - testdrive_vars.yaml
+  tasks:
+    - name: Take dev snap
+      purefa_snap:
+        name: mig-pod::linux-01
+        suffix: ansible
+        fa_url: "{{ fa1_ip }}"
+        api_token: "{{ fa1_token }}" 
+
+    - name: Create a R/W clone
+      purefa_snap:
+        name: mig-pod::linux-01
+        suffix: snap
+        target: mig-pod::ansible-test
+        fa_url: "{{ fa1_ip }}"
+        api_token: "{{ fa1_token }}"
+        state: copy
+
+    - name: Overwrite to mounted copy
+      purefa_snap:
+        name: mig-pod::linux-01
+        suffix: ansible
+        target: mig-pod::ansible-test
+        overwrite: true
+        fa_url: "{{ fa1_ip }}"
+        api_token: "{{ fa1_token }}"
+        state: copy
+
+    - name: Delete and eradicate snapshot dev-snap.snap
+      purefa_snap:
+        name: mig-pod::linux-01
+        suffix: snap
+        eradicate: true
+        fa_url: "{{ fa1_ip }}"
+        api_token: "{{ fa1_token }}"
+        state: absent
+        

@@ -40,12 +40,12 @@
       fa_url: "{{ fa1_ip }}"
       api_token: "{{ fa1_token }}"
 
- # - name: Move migration volume to migration pod
- #   purefa_volume:
- #     name: "{{ migration_vol }}"
- #     move: "{{ migration_pod }}"
- #     fa_url: "{{ fa1_ip }}"
- #     api_token: "{{ fa1_token }}"
+  - name: Move migration volume to migration pod
+    purefa_volume:
+      name: "{{ migration_vol }}"
+      move: "{{ migration_pod }}"
+      fa_url: "{{ fa1_ip }}"
+      api_token: "{{ fa1_token }}"
 
   - name: Stretch migration pod to destination array
     purefa_pod:
