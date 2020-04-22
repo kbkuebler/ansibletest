@@ -1,0 +1,76 @@
+---
+- name: Create volume for migration example
+  hosts: localhost
+  gather_facts: true
+  collections:
+    - purestorage.flasharray
+  vars_files:
+    - testdrive_vars.yaml
+  tasks:
+  - name: Get FlashArray information
+    purefa_info:
+        gather_subset:
+        - minimum
+        - network
+        - interfaces
+        fa_url: "{{ fa1_ip }}"
+        api_token: "{{ fa1_token }}"
+    register: fa1_info
+
+  - name: Create volume for migration
+    purefa_volume:
+        name: "{{ migration_vol }}"
+        size: 100G
+        fa_url: "{{ fa1_ip }}"
+        api_token: "{{ fa1_token }}"
+  
+  - name: Get serial number of volume for migration
+    purefa_info:
+        gather_subset: volumes
+        fa_url: "{{ fa1_ip }}"
+        api_token: "{{ fa1_token }}"
+    register: volumes_data
+
+  - set_fact:
+        volume_serial: "{{ volumes_data.purefa_info.volumes[migration_vol].serial }}"
+
+  - name: Create host object on FA1 and attach volume
+    purefa_host:
+        host: "{{ ansible_hostname }}"
+        iqn: "{{ ansible_iscsi_iqn }}"
+        volume: "{{ migration_vol }}"
+        fa_url: "{{ fa1_ip }}"
+        api_token: "{{ fa1_token }}"
+
+  - name: Discover FlashArray iSCSI ports
+    open_iscsi:
+        show_nodes: yes
+        discover: yes
+        portal: "{{ fa1_info.purefa_info.network[fa1_iscsi_port].address }}"
+    register: fa1_iscsi_iqn
+
+  - name: Connect to FA1 over iSCSI
+    open_iscsi:
+        target: "{{ fa1_iscsi_iqn.nodes[0] }}"
+        login: yes
+
+  - name: Force multipath rescan
+    command: /usr/sbin/multipath -r
+
+  - name: Get multipath device for migration volume
+    shell:
+        cmd: /usr/sbin/multipath -ll |grep -i {{ volume_serial }}| awk '{print $2}'
+    register: mpath_dev
+
+  - name: Format migration volume
+    filesystem:
+        fstype: ext4
+        dev: '/dev/{{ mpath_dev.stdout }}'
+
+  - name: Mount the migration volume
+    mount:
+        path: "{{ mount_path }}"
+        fstype: ext4
+        src: '/dev/{{ mpath_dev.stdout }}'
+        state: mounted
+

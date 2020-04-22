@@ -4,7 +4,8 @@
 
 # Install necessary packages, only python2 installed
 
-APACKG=( epel-release python3 python3-pip centos-release-ansible-29 ansible vim )
+echo "======="
+APACKG=( epel-release python3 python3-pip centos-release-ansible-29 ansible vim python2-jmespath )
 
 
 echo "####  Installing Python3 and Ansible  ####"
@@ -23,7 +24,7 @@ done
 
 echo "####  Installing the Pure Storage SDK  ####"
 pip3 install purestorage
-
+pip3 install jmespath
 # Install the Pure Storage collection
 
 echo "#### Installing the Purestorage Ansible Collection  ####"
@@ -71,3 +72,6 @@ done
 git config --global user.name "Brian Kuebler"
 git config --global user.email bkuebler@gmail.com
 
+# Should be able to remove this after 1.23 is released
+mv .ansible/collections/ansible_collections/purestorage/flasharray/plugins/modules/purefa_pod.py ~/purefa_pod.orig
+cp ~/ansibletest/purefa_pod.py ~/.ansible/collections/ansible_collections/purestorage/flasharray/plugins/modules/
