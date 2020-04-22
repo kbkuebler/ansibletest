@@ -11,7 +11,7 @@ APACKG=( epel-release python3 python3-pip centos-release-ansible-29 ansible vim 
 echo "####  Installing Python3 and Ansible  ####"
 
 for pkg in "${APACKG[@]}";do
-    if yum -q list installed "$pkg" > /dev/null 2&>1; then
+    if yum -q list installed "$pkg" > /dev/null 2>&1; then
         echo -e "$pkg is already installed"
     else
         yum install "$pkg" -y && echo "Successfully installed $pkg"
