@@ -42,7 +42,8 @@
     - name: Remove multipath device
       shell:
          cmd: /usr/sbin/multipath -r /dev/{{ mpath_dev.stdout }}
-
+      ignore_errors: yes
+      
     - name: Flush multipath cache
       shell:
          cmd: /usr/bin/multipath -F
