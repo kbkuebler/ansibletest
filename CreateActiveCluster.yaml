@@ -40,17 +40,17 @@
       fa_url: "{{ fa1_ip }}"
       api_token: "{{ fa1_token }}"
 
-  - name: Move migration volume to migration pod
-    purefa_volume:
-      name: "{{ migration_vol }}"
-      move: "{{ migration_pod }}"
-      fa_url: "{{ fa1_ip }}"
-      api_token: "{{ fa1_token }}"
+ # - name: Move migration volume to migration pod
+ #   purefa_volume:
+ #     name: "{{ migration_vol }}"
+ #     move: "{{ migration_pod }}"
+ #     fa_url: "{{ fa1_ip }}"
+ #     api_token: "{{ fa1_token }}"
 
   - name: Stretch migration pod to destination array
     purefa_pod:
       name: "{{ migration_pod }}"
-      stretch: "{{ fa1_info['purefa_info']['default']['array_name'] }}"
+      stretch: "{{ fa2_info['purefa_info']['default']['array_name'] }}"
       fa_url: "{{ fa1_ip }}"
       api_token: "{{ fa1_token }}"
 
@@ -76,12 +76,12 @@
     open_iscsi:
       show_nodes: yes
       discover: yes
-      portal: "{{ dst_array_info.purefa_info.network[dst_iscsi_port].address }}"
-    register: dst_iscsi_iqn
+      portal: "{{ fa2_info.purefa_info.network[fa2_iscsi_port].address }}"
+    register: fa2_iscsi_iqn
 
   - name: Connect to destination FlashArray over iSCSI
     open_iscsi:
-      target: "{{ dst_iscsi_iqn.nodes[0] }}"
+      target: "{{ fa2_iscsi_iqn.nodes[0] }}"
       login: yes
 
   - name: Ensure new multipath links from destination array are connected
