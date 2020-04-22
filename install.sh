@@ -35,7 +35,7 @@ echo "####  Making VIM feel right ####"
 cat << 'EOF' >> ~/.vimrc
 set incsearch           " search as characters are entered
 set hlsearch            " highlight matches
-colo elflord                " set colorscheme
+colo torte              " set colorscheme
 syntax on               " syntax highlighing on
 set expandtab           " tabs are spaces
 set softtabstop=4       " number of spaces in tab when editing
@@ -72,6 +72,9 @@ done
 git config --global user.name "Brian Kuebler"
 git config --global user.email bkuebler@gmail.com
 
+# Save a second and create a mount point in /mnt
+mkdir /mnt/ansible-test
+
 # Should be able to remove this after 1.23 is released
-mv .ansible/collections/ansible_collections/purestorage/flasharray/plugins/modules/purefa_pod.py ~/purefa_pod.orig
+mv ~/.ansible/collections/ansible_collections/purestorage/flasharray/plugins/modules/purefa_pod.py ~/purefa_pod.orig
 cp ~/ansibletest/purefa_pod.py ~/.ansible/collections/ansible_collections/purestorage/flasharray/plugins/modules/
