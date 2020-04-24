@@ -75,6 +75,9 @@ git config --global user.email bkuebler@gmail.com
 # Save a second and create a mount point in /mnt
 mkdir /mnt/ansible-test
 
+# Typing "ansible-playbook" everytime is a hassle...
+echo "alias ap='ansible-playbook" >> ~/.bashrc
+
 # Should be able to remove this after 1.23 is released
 mv ~/.ansible/collections/ansible_collections/purestorage/flasharray/plugins/modules/purefa_pod.py ~/purefa_pod.orig
 cp ~/ansibletest/purefa_pod.py ~/.ansible/collections/ansible_collections/purestorage/flasharray/plugins/modules/
