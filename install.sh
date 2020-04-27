@@ -76,7 +76,7 @@ git config --global user.email bkuebler@gmail.com
 mkdir /mnt/ansible-test
 
 # Typing "ansible-playbook" everytime is a hassle...
-echo "alias ap='ansible-playbook" >> ~/.bashrc
+echo "alias ap='ansible-playbook'" >> ~/.bashrc
 
 # Should be able to remove this after 1.23 is released
 mv ~/.ansible/collections/ansible_collections/purestorage/flasharray/plugins/modules/purefa_pod.py ~/purefa_pod.orig

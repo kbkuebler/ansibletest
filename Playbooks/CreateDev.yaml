@@ -9,16 +9,16 @@
   tasks:
     - name: Take dev snap
       purefa_snap:
-        name: mig-pod::linux-01
+        name: mig-pod::ansible-src
         suffix: ansible
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}" 
 
     - name: Create a R/W clone
       purefa_snap:
-        name: mig-pod::linux-01
+        name: mig-pod::ansible-src
         suffix: snap
-        target: mig-pod::ansible-test
+        target: mig-pod::ansible-tgt
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}"
         state: copy
@@ -27,7 +27,7 @@
       purefa_snap:
         name: mig-pod::linux-01
         suffix: ansible
-        target: mig-pod::ansible-test
+        target: mig-pod::ansible-tgt
         overwrite: true
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}"
@@ -35,7 +35,7 @@
 
     - name: Delete and eradicate snapshot dev-snap.snap
       purefa_snap:
-        name: mig-pod::linux-01
+        name: mig-pod::ansible-src
         suffix: snap
         eradicate: true
         fa_url: "{{ fa1_ip }}"

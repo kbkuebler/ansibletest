@@ -56,6 +56,7 @@
 
   - name: Force multipath rescan
     command: /usr/sbin/multipath -r
+    command: /usr/bin/scsi-rescan
 
   - name: Get multipath device for migration volume
     shell:
@@ -73,4 +74,4 @@
         fstype: ext4
         src: '/dev/{{ mpath_dev.stdout }}'
         state: mounted
-
+...
