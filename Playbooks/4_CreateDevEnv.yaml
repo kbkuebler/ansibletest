@@ -49,31 +49,25 @@
     
     - name: Rescan
       command: /usr/bin/scsi-rescan        
-    
-    - name: Gather volume info
-      purefa_info:
-        gather_subset:
-        - volumes
-        fa_url: "{{ fa1_ip }}"
-        api_token: "{{ fa1_token }}"
-      register: volumes_data
-    - set_fact: 
-        volume_serial: "{{ volumes_data.purefa_info.volumes[target_vol].serial }}"
-
-
-    - name: Mount /dev/ansible-test
+   
+    - name: Get multipath device for migration volume
+      shell:
+          cmd: /usr/sbin/multipath -ll |grep -i {{ volume_serial }}| awk '{print $2}'
+      register: mpath_dev
+ 
+    - name: Mount the Dev volume
       mount:
-        path: "{{ dev_mount_path }}"
-        src: "{{ volume_serial }}"
-        fstype: ext4
-        state: mounted
-
-    - name: Delete and eradicate snapshot dev-snap.snap
-      purefa_snap:
-        name: mig-pod::ansible-src
-        suffix: snap
-        eradicate: true
-        fa_url: "{{ fa1_ip }}"
-        api_token: "{{ fa1_token }}"
-        state: absent
+         path: "{{ dev_mount_path }}"
+         fstype: ext4
+         src: '/dev/{{ mpath_dev.stdout }}'
+         state: mounted
+     
+     - name: Delete and eradicate snapshot dev-snap.snap
+       purefa_snap:
+         name: mig-pod::ansible-src
+         suffix: snap
+         eradicate: true
+         fa_url: "{{ fa1_ip }}"
+         api_token: "{{ fa1_token }}"
+         state: absent
 ...

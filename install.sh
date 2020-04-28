@@ -31,7 +31,9 @@ echo "#### Installing the Purestorage Ansible Collection  ####"
 
 ansible-galaxy collection install purestorage.flasharray
 
+
 echo "####  Making VIM feel right ####"
+
 cat << 'EOF' >> ~/.vimrc
 set incsearch           " search as characters are entered
 set hlsearch            " highlight matches
@@ -49,6 +51,7 @@ echo "#### Changing hostname ####"
 
 echo "linux" > /etc/hostname
 systemctl restart systemd-hostnamed
+sleep 3
 
 HNAME=$(hostname)
 
@@ -60,11 +63,6 @@ for lname in 'linux';do
     fi
 done
 
-# Let's clean up the existing linux host and volume
-# Actually, let's do it via ansible
-# purevol disconnect --host linux linux-lun-01
-# purevol destroy linux-lun-01
-# purehost delete linux
 
 #systemctl restart multipathd
 #/usr/sbin/multipath -r
@@ -76,7 +74,9 @@ git config --global user.email bkuebler@gmail.com
 mkdir /mnt/ansible-test
 
 # Typing "ansible-playbook" everytime is a hassle...
+echo "" >> ~/.bashrc
 echo "alias ap='ansible-playbook'" >> ~/.bashrc
+echo "alias P='cd ~/ansibletest/Playbooks'" >> ~/.bashrc
 
 # Should be able to remove this after 1.23 is released
 mv ~/.ansible/collections/ansible_collections/purestorage/flasharray/plugins/modules/purefa_pod.py ~/purefa_pod.orig
