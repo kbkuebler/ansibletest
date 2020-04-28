@@ -1,5 +1,5 @@
 ---
-- name: Create volume for migration example
+- name: Create host src vol for demo and attch, format 
   hosts: localhost
   gather_facts: true
   collections:
@@ -17,14 +17,14 @@
         api_token: "{{ fa1_token }}"
     register: fa1_info
 
-  - name: Create volume for migration
+  - name: Create volume for testing
     purefa_volume:
         name: "{{ migration_vol }}"
         size: 100G
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}"
   
-  - name: Get serial number of volume for migration
+  - name: Get serial number of volume for demo
     purefa_info:
         gather_subset: volumes
         fa_url: "{{ fa1_ip }}"
@@ -42,33 +42,21 @@
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}"
 
-#  - name: Discover FlashArray iSCSI ports
-#    open_iscsi:
-#        show_nodes: yes
-#        discover: yes
-#        portal: "{{ fa1_info.purefa_info.network[fa1_iscsi_port].address }}"
-#    register: fa1_iscsi_iqn
-
-#  - name: Connect to FA1 over iSCSI
-#    open_iscsi:
-#        target: "{{ fa1_iscsi_iqn.nodes[0] }}"
-#        login: yes
-
   - name: Force multipath rescan
     command: /usr/sbin/multipath -r
     command: /usr/bin/scsi-rescan
 
-  - name: Get multipath device for migration volume
+  - name: Get multipath device id for demo volume
     shell:
         cmd: /usr/sbin/multipath -ll |grep -i {{ volume_serial }}| awk '{print $2}'
     register: mpath_dev
 
-  - name: Format migration volume
+  - name: Format demo volume
     filesystem:
         fstype: ext4
         dev: '/dev/{{ mpath_dev.stdout }}'
 
-  - name: Mount the migration volume
+  - name: Mount the demo volume
     mount:
         path: "{{ mount_path }}"
         fstype: ext4

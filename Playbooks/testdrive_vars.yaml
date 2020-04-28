@@ -11,3 +11,4 @@ mount_path: /mnt/mig-test
 dev_mount_path: /mnt/ansible-test
 orig_volume: linux-lun-01
 target_vol: ansible-tgt
+pod_vol: mig-pod::ansible-src

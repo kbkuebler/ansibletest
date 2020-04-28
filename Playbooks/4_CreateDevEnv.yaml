@@ -8,10 +8,20 @@
     - testdrive_vars.yaml
   
   tasks:
+    - name: Get volume information
+      purefa_info:
+        gather_subset: volumes
+        fa_url: "{{ fa1_ip }}"
+        api_token: "{{ fa1_token }}" 
+      register: volumes_data
+
+    - set_fact:
+        volume_serial: "{{ volumes_data.purefa_info.volumes[pod_vol].serial }}" 
+
     - name: Unmount file systems
       mount:
-       path: "{{ dev_mount_path }}"
-       state: unmounted  
+         path: "{{ dev_mount_path }}"
+         state: absent  
 
     - name: Take backup snap
       purefa_snap:
@@ -62,8 +72,8 @@
          src: '/dev/{{ mpath_dev.stdout }}'
          state: mounted
      
-     - name: Delete and eradicate snapshot dev-snap.snap
-       purefa_snap:
+    - name: Delete and eradicate snapshot dev-snap.snap
+      purefa_snap:
          name: mig-pod::ansible-src
          suffix: snap
          eradicate: true
