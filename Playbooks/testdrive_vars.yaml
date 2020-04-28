@@ -8,4 +8,6 @@ migration_pod: mig-pod
 fa1_iscsi_port: ct0.eth1
 fa2_iscsi_port: ct0.eth1
 mount_path: /mnt/mig-test
+dev_mount_path: /mnt/ansible-tgt
 orig_volume: linux-lun-01
+

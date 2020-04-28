@@ -42,17 +42,17 @@
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}"
 
-  - name: Discover FlashArray iSCSI ports
-    open_iscsi:
-        show_nodes: yes
-        discover: yes
-        portal: "{{ fa1_info.purefa_info.network[fa1_iscsi_port].address }}"
-    register: fa1_iscsi_iqn
+#  - name: Discover FlashArray iSCSI ports
+#    open_iscsi:
+#        show_nodes: yes
+#        discover: yes
+#        portal: "{{ fa1_info.purefa_info.network[fa1_iscsi_port].address }}"
+#    register: fa1_iscsi_iqn
 
-  - name: Connect to FA1 over iSCSI
-    open_iscsi:
-        target: "{{ fa1_iscsi_iqn.nodes[0] }}"
-        login: yes
+#  - name: Connect to FA1 over iSCSI
+#    open_iscsi:
+#        target: "{{ fa1_iscsi_iqn.nodes[0] }}"
+#        login: yes
 
   - name: Force multipath rescan
     command: /usr/sbin/multipath -r

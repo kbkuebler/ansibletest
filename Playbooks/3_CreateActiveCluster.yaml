@@ -1,4 +1,4 @@
-- name: Live migration using ActiveCluster
+- name: Create an ActiveCluster environment
   hosts: localhost
   gather_facts: true
   collections:
@@ -6,6 +6,7 @@
   vars_files:
     - testdrive_vars.yaml
   tasks:
+
   - name: Get source FlashArray info
     purefa_info:
       gather_subset:

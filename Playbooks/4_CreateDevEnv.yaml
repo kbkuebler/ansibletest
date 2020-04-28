@@ -6,32 +6,50 @@
     - purestorage.flasharray
   vars_files:
     - testdrive_vars.yaml
+  
   tasks:
-    - name: Take dev snap
+#    - name: Gather the FlashArray info
+#      purefa_info:
+#        gather_subset:
+#        - minimum
+#        - network
+#        - interfaces
+#        fa_url: "{{ fa1_ip }}"
+#        api_token: "{{ fa1_token }}"
+
+    - name: Take backup snap
       purefa_snap:
         name: mig-pod::ansible-src
-        suffix: ansible
+        suffix: snap
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}" 
+        state: present
 
     - name: Create a R/W clone
       purefa_snap:
         name: mig-pod::ansible-src
         suffix: snap
-        target: mig-pod::ansible-tgt
+        target: ansible-tgt
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}"
         state: copy
 
     - name: Overwrite to mounted copy
       purefa_snap:
-        name: mig-pod::linux-01
-        suffix: ansible
-        target: mig-pod::ansible-tgt
+        name: mig-pod::ansible-src
+        suffix: snap
+        target: ansible-tgt
         overwrite: true
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}"
         state: copy
+
+    - name: Map copy to linux host
+      purefa_host:
+        host: "{{ ansible_hostname }}"
+        volume: ansible-tgt
+        fa_url: "{{ fa1_ip }}"
+        api_token: "{{ fa1_token }}"
 
     - name: Delete and eradicate snapshot dev-snap.snap
       purefa_snap:
@@ -41,4 +59,4 @@
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}"
         state: absent
-        
+...      
