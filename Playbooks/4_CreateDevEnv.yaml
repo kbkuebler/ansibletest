@@ -25,7 +25,7 @@
 
     - name: Take backup snap
       purefa_snap:
-        name: mig-pod::ansible-src
+        name: demo-pod::ansible-src
         suffix: snap
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}" 
@@ -33,7 +33,7 @@
 
     - name: Create a R/W clone
       purefa_snap:
-        name: mig-pod::ansible-src
+        name: demo-pod::ansible-src
         suffix: snap
         target: ansible-tgt
         fa_url: "{{ fa1_ip }}"
@@ -42,7 +42,7 @@
     
     - name: Overwrite to mounted copy
       purefa_snap:
-        name: mig-pod::ansible-src
+        name: demo-pod::ansible-src
         suffix: snap
         target: ansible-tgt
         overwrite: true
@@ -60,7 +60,7 @@
     - name: Rescan
       command: /usr/bin/scsi-rescan        
    
-    - name: Get multipath device for migration volume
+    - name: Get multipath device for demo volume
       shell:
           cmd: /usr/sbin/multipath -ll |grep -i {{ volume_serial }}| awk '{print $2}'
       register: mpath_dev
@@ -74,7 +74,7 @@
      
     - name: Delete and eradicate snapshot dev-snap.snap
       purefa_snap:
-         name: mig-pod::ansible-src
+         name: demo-pod::ansible-src
          suffix: snap
          eradicate: true
          fa_url: "{{ fa1_ip }}"

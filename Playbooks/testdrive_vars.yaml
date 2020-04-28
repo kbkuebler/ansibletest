@@ -3,12 +3,12 @@ fa1_ip: 172.16.3.101
 fa1_token: cd6ba527-a21f-a014-d80b-13687c33402d
 fa2_ip: 172.16.3.111
 fa2_token: ff703c77-4db4-5e84-6734-b2d37acce147
-migration_vol: ansible-src
-migration_pod: mig-pod
+demo_vol: ansible-src
+demo_pod: demo-pod
 fa1_iscsi_port: ct0.eth1
 fa2_iscsi_port: ct0.eth1
-mount_path: /mnt/mig-test
-dev_mount_path: /mnt/ansible-test
+mount_path: /mnt/ansible-src
+dev_mount_path: /mnt/ansible-tgt
 orig_volume: linux-lun-01
 target_vol: ansible-tgt
-pod_vol: mig-pod::ansible-src
+pod_vol: demo-pod::ansible-src

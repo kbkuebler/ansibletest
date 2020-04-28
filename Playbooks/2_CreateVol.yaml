@@ -19,7 +19,7 @@
 
   - name: Create volume for testing
     purefa_volume:
-        name: "{{ migration_vol }}"
+        name: "{{ demo_vol }}"
         size: 100G
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}"
@@ -32,13 +32,13 @@
     register: volumes_data
 
   - set_fact:
-        volume_serial: "{{ volumes_data.purefa_info.volumes[migration_vol].serial }}"
+        volume_serial: "{{ volumes_data.purefa_info.volumes[demo_vol].serial }}"
 
   - name: Create host object on FA1 and attach volume
     purefa_host:
         host: "{{ ansible_hostname }}"
         iqn: "{{ ansible_iscsi_iqn }}"
-        volume: "{{ migration_vol }}"
+        volume: "{{ demo_vol }}"
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}"
 

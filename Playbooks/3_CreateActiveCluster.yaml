@@ -35,22 +35,22 @@
       fa_url: "{{ fa1_ip }}"
       api_token: "{{ fa1_token }}"
 
-  - name: Create migration pod
+  - name: Create demo pod
     purefa_pod:
-      name: "{{ migration_pod }}"
+      name: "{{ demo_pod }}"
       fa_url: "{{ fa1_ip }}"
       api_token: "{{ fa1_token }}"
 
-  - name: Move migration volume to migration pod
+  - name: Move demo volume to demo pod
     purefa_volume:
-      name: "{{ migration_vol }}"
-      move: "{{ migration_pod }}"
+      name: "{{ demo_vol }}"
+      move: "{{ demo_pod }}"
       fa_url: "{{ fa1_ip }}"
       api_token: "{{ fa1_token }}"
 
-  - name: Stretch migration pod to destination array
+  - name: Stretch demo pod to destination array
     purefa_pod:
-      name: "{{ migration_pod }}"
+      name: "{{ demo_pod }}"
       stretch: "{{ fa2_info['purefa_info']['default']['array_name'] }}"
       fa_url: "{{ fa1_ip }}"
       api_token: "{{ fa1_token }}"
@@ -63,13 +63,13 @@
     register: output
     retries: 40
     delay: 5
-    until: "output | json_query('purefa_info.pods.\"{{ migration_pod }}\".arrays[].status') == ['online', 'online']"
+    until: "output | json_query('purefa_info.pods.\"{{ demo_pod }}\".arrays[].status') == ['online', 'online']"
 
   - name: Create host object on destination array
     purefa_host:
       host: "{{ ansible_hostname }}"
       iqn: "{{ ansible_iscsi_iqn }}"
-      volume: "{{ migration_pod }}::{{ migration_vol }}"
+      volume: "{{ demo_pod }}::{{ demo_vol }}"
       fa_url: "{{ fa2_ip }}"
       api_token: "{{ fa2_token }}"
 
