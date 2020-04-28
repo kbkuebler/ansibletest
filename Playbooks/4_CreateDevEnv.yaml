@@ -8,14 +8,10 @@
     - testdrive_vars.yaml
   
   tasks:
-#    - name: Gather the FlashArray info
-#      purefa_info:
-#        gather_subset:
-#        - minimum
-#        - network
-#        - interfaces
-#        fa_url: "{{ fa1_ip }}"
-#        api_token: "{{ fa1_token }}"
+    - name: Unmount file systems
+      mount:
+       path: "{{ dev_mount_path }}"
+       state: unmounted  
 
     - name: Take backup snap
       purefa_snap:
@@ -33,7 +29,7 @@
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}"
         state: copy
-
+    
     - name: Overwrite to mounted copy
       purefa_snap:
         name: mig-pod::ansible-src
@@ -50,6 +46,27 @@
         volume: ansible-tgt
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}"
+    
+    - name: Rescan
+      command: /usr/bin/scsi-rescan        
+    
+    - name: Gather volume info
+      purefa_info:
+        gather_subset:
+        - volumes
+        fa_url: "{{ fa1_ip }}"
+        api_token: "{{ fa1_token }}"
+      register: volumes_data
+    - set_fact: 
+        volume_serial: "{{ volumes_data.purefa_info.volumes[target_vol].serial }}"
+
+
+    - name: Mount /dev/ansible-test
+      mount:
+        path: "{{ dev_mount_path }}"
+        src: "{{ volume_serial }}"
+        fstype: ext4
+        state: mounted
 
     - name: Delete and eradicate snapshot dev-snap.snap
       purefa_snap:
@@ -59,4 +76,4 @@
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}"
         state: absent
-...      
+...
