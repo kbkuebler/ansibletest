@@ -7,8 +7,8 @@ demo_vol: ansible-src
 demo_pod: demo-pod
 fa1_iscsi_port: ct0.eth1
 fa2_iscsi_port: ct0.eth1
-mount_path: /mnt/ansible-src
-dev_mount_path: /mnt/ansible-tgt
+src_mount_path: /mnt/ansible-src
+tgt_mount_path: /mnt/ansible-tgt
 orig_volume: linux-lun-01
-target_vol: ansible-tgt
+tgt_vol: ansible-tgt
 pod_vol: demo-pod::ansible-src

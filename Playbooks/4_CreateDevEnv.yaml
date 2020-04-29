@@ -16,12 +16,19 @@
       register: volumes_data
 
     - set_fact:
-        volume_serial: "{{ volumes_data.purefa_info.volumes[pod_vol].serial }}" 
+        src_serial: "{{ volumes_data.purefa_info.volumes[pod_vol].serial }}" 
+    - set_fact:
+        tgt_serial: "{{ volumes_data.purefa_info.volumes[tgt_vol].serial }}"
 
-    - name: Unmount file systems
+    - name: Unmount src file systems
       mount:
-         path: "{{ dev_mount_path }}"
-         state: absent  
+         path: "{{ src_mount_path }}"
+         state: unmounted
+    
+    - name: Unmount tgt file systems
+      mount:
+         path: "{{ tgt_mount_path }}"
+         state: unmounted
 
     - name: Take backup snap
       purefa_snap:
@@ -44,7 +51,7 @@
       purefa_snap:
         name: demo-pod::ansible-src
         suffix: snap
-        target: ansible-tgt
+        target: "{{ tgt_vol }}"
         overwrite: true
         fa_url: "{{ fa1_ip }}"
         api_token: "{{ fa1_token }}"
@@ -60,18 +67,30 @@
     - name: Rescan
       command: /usr/bin/scsi-rescan        
    
-    - name: Get multipath device for demo volume
+    - name: Get multipath device for source volume
       shell:
-          cmd: /usr/sbin/multipath -ll |grep -i {{ volume_serial }}| awk '{print $2}'
-      register: mpath_dev
- 
-    - name: Mount the Dev volume
+          cmd: /usr/sbin/multipath -ll |grep -i {{ src_serial }}| awk '{print $2}'
+      register: mpath_src
+
+    - name: Get the multipath device for target volume 
+      shell:
+          cmd: /usr/sbin/multipath -ll|grep -i {{ tgt_serial }}| awk '{print $2}'
+      register: mpath_tgt
+
+    - name: Mount the src volume
       mount:
-         path: "{{ dev_mount_path }}"
+         path: "{{ src_mount_path }}"
          fstype: ext4
-         src: '/dev/{{ mpath_dev.stdout }}'
+         src: '/dev/{{ mpath_src.stdout }}'
          state: mounted
      
+    - name: Mount the tgt volume
+      mount:
+        path: "{{ tgt_mount_path }}"  
+        fstype: ext4
+        src: '/dev/{{ mpath_tgt.stdout }}'
+        state: mounted
+
     - name: Delete and eradicate snapshot dev-snap.snap
       purefa_snap:
          name: demo-pod::ansible-src
