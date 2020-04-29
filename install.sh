@@ -4,7 +4,8 @@
 
 # Install necessary packages, only python2 installed
 
-echo "======="
+echo "#####################################"
+
 APACKG=( epel-release python3 python3-pip centos-release-ansible-29 ansible vim python2-jmespath )
 
 
