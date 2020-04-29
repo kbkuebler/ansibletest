@@ -70,8 +70,8 @@ done
 git config --global user.name "Brian Kuebler"
 git config --global user.email bkuebler@gmail.com
 
-# Save a second and create a mount point in /mnt
-mkdir /mnt/demo-src
+# Save a second and create a mount point in /mnt - Actually, Ansible will create the mount point.
+# mkdir /mnt/ansible-src
 
 # Typing "ansible-playbook" everytime is a hassle...
 echo "" >> ~/.bashrc
