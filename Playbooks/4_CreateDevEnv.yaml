@@ -17,18 +17,16 @@
 
     - set_fact:
         src_serial: "{{ volumes_data.purefa_info.volumes[pod_vol].serial }}" 
-    - set_fact:
-        tgt_serial: "{{ volumes_data.purefa_info.volumes[tgt_vol].serial }}"
-
+   
     - name: Unmount src file systems
       mount:
          path: "{{ src_mount_path }}"
          state: unmounted
     
-    - name: Unmount tgt file systems
-      mount:
-         path: "{{ tgt_mount_path }}"
-         state: unmounted
+#    - name: Unmount tgt file systems
+#      mount:
+#         path: "{{ tgt_mount_path }}"
+#         state: unmounted
 
     - name: Take backup snap
       purefa_snap:
@@ -71,6 +69,20 @@
       shell:
           cmd: /usr/sbin/multipath -ll |grep -i {{ src_serial }}| awk '{print $2}'
       register: mpath_src
+
+
+    - name: Get volume information
+      purefa_info:
+        gather_subset: volumes
+        fa_url: "{{ fa1_ip }}"
+        api_token: "{{ fa1_token }}" 
+      register: volumes_data
+
+
+    - set_fact:
+        tgt_serial: "{{ volumes_data.purefa_info.volumes[tgt_vol].serial }}"
+
+
 
     - name: Get the multipath device for target volume 
       shell:
