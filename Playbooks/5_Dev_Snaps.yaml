@@ -1,12 +1,11 @@
 ---
-- name: Refresh up dev env
+- name: Refresh Development Data
   hosts: localhost
   gather_facts: true
   collections:
     - purestorage.flasharray
   vars_files:
     - testdrive_vars.yaml
-
   tasks:
     - name: Get volume information
       purefa_info:
@@ -20,7 +19,7 @@
     - set_fact:
         src_serial: "{{ volumes_data.purefa_info.volumes[pod_vol].serial }}"
 
-    - name: Unmount target vol
+    - name: Unmount target vol for consistency
       mount:
         path: "{{ tgt_mount_path }}"
         state: unmounted
@@ -42,7 +41,7 @@
         api_token: "{{ fa1_token }}"
         state: copy
 
-    - name: Overwrite to mounted copy
+    - name: Overwrite to mounted copy. This is where some people get skittish.
       purefa_snap:
         name: "{{ pod_vol }}"
         suffix: snap
@@ -64,7 +63,8 @@
       purefa_snap:
          name: "{{ pod_vol }}"
          suffix: snap
-         eradicate: true
+         eradicate: true #Change this to 'false' if you want the snap\
+                         #to stay in eradication cue for 24H.
          fa_url: "{{ fa1_ip }}"
          api_token: "{{ fa1_token }}"
          state: absent
