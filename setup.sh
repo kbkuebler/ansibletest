@@ -9,14 +9,16 @@ set -o nounset
 set -o pipefail
 
 #Call for any external install files
-kubesprayinstall = "./installKubernetes.sh"     #get the most recent \
+kubesprayinstall="./installKubernetes.sh"     #get the most recent \
                                                 #kubesprayinstall
-ansibleinstall = "./installAnsible.sh"
+ansibleinstall="./installAnsible.sh"
 # Install necessary packages. Currently, only python2 installed.
 
-
+echo " "
+echo " "
 echo "#############################################################"
-
+echo " "
+echo " "
 function installPackages() {
   #install all required Linux packages
   APACKG=( epel-release
@@ -26,7 +28,10 @@ function installPackages() {
            vim
            python2-jmespath )
 
+  echo "##########################################"
   echo "####  Installing Python3 and Ansible  ####"
+  echo "##########################################"
+  echo " " 
 
   for pkg in "${APACKG[@]}";do
       if yum -q list installed "$pkg" > /dev/null 2>&1; then
@@ -41,6 +46,7 @@ function installPackages() {
   echo "" >> ~/.bashrc
   echo "alias ap='ansible-playbook'" >> ~/.bashrc
   echo "alias P='cd ~/ansibletest/Playbooks'" >> ~/.bashrc
+
 }
 
 function installAnsible() {
@@ -54,10 +60,12 @@ function installAnsible() {
 }
 
 function installKubernetes() {
-  #statements
+  
   if [[ -f $kubesprayinstall ]]; then
-    echo "running $kubesprayinstall"
-    $kubesprayinstall
+    echo " "
+    echo "Here is where we would be running $kubesprayinstall"
+    echo " "
+    # $kubesprayinstall
   else
     echo "Please check to make sure that $kubesprayinstall exists"
   fi
@@ -70,6 +78,7 @@ installAnsible
 installKubernetes
 
 sleep 3
-
+echo " "
 echo "Installation complete. Run 'source .bashrc'\
  in order to use new aliases."
+echo " "
