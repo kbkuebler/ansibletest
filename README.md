@@ -16,6 +16,6 @@ The playbooks are straightforward, and actually demonstrate many of the things t
 * 4_CreateSnaps.yaml - Creates a snapshot of our new volume, copies it to a new volume, and then mounts it on our test linux server
 * 5_Dev_Snaps.yaml - Hand this off to your development team and they will be able to refresh data on their own! No need to involve a storage admin.
 
-As you can see, they are simple, self describing, and above all, *funtional*. We would love to provide you with a Pure Test Drive voucher so you can try these out on your own!
+As you can see, they are simple, self describing, and above all, *functional*. We would love to provide you with a Pure Test Drive voucher so you can try these out on your own!
 
 Click the link for more about [Pure Test Drive](https://www.purestorage.com/products/flasharray-x/test-drive.html)
