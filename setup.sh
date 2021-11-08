@@ -59,23 +59,12 @@ function installAnsible() {
   fi
 }
 
-function installKubernetes() {
-  
-  if [[ -f $kubesprayinstall ]]; then
-    echo " "
-    echo "Here is where we would be running $kubesprayinstall"
-    echo " "
-    # $kubesprayinstall
-  else
-    echo "Please check to make sure that $kubesprayinstall exists"
-  fi
-}
 
 
 #Let's run everything
 installPackages
 installAnsible
-installKubernetes
+
 
 sleep 3
 echo " "
